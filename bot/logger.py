@@ -10,11 +10,12 @@ import time
 from bot.data import VERBS
 
 
-LOG_STRING = '[{0:%Y-%m-%d %H:%M:%S}/{1}] {2}'
+LOG_STRING = '[{0:%Y-%m-%d %H:%M:%S} {1}] {2}'
 
 
 class Logger(object):
     """ Объект для записи сообщений, каждому — свой """
+
     def __init__(self, user, log_file, girl):
         self.user = user
         self.log_file = log_file
@@ -49,8 +50,8 @@ class Logger(object):
             duration += random.random() * 30
 
         if message:
-            if "{" in message:
-                self.log(message.format(duration/60))
+            if "{}" in message:
+                self.log(message.format(duration / 60))
 
             else:
                 self.log(message)

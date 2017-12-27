@@ -5,11 +5,23 @@
 import random
 import time
 
-from sessions import ADVENTURES
+
+from bot.data import (
+    SHORE, CAVE, CARAVANS, WOODS
+)
+
+
+ADVENTURES = [
+    {"command": SHORE, "level": 0, "chance": 0},
+    {"command": CAVE, "level": 0, "chance": 0},
+    {"command": CARAVANS, "level": 0, "chance": 0},
+    {"command": WOODS, "level": 0, "chance": 1},
+]
 
 
 class Location(object):
     """ Локация, любое место в игре, куда можем отправиться """
+
     def __init__(self, console, command, instant, prob):
         """
         console: название в консоли
@@ -32,9 +44,7 @@ class Location(object):
     @property
     def travel(self):
         """ Определяет, идем или не идем в локацию """
-        if random.random() < self.prob:
-            return True
-        return False
+        return random.random() <= self.prob
 
     @property
     def emoji(self):
@@ -56,6 +66,7 @@ class Random(Location):
 
 class Adventures(Location):
     """ Локация для всех приключений """
+
     def __init__(self, console, command, instant, prob):
         super().__init__(console, command, instant, prob)
         self.level = 0
@@ -75,7 +86,7 @@ class Adventures(Location):
 
             return command["command"]
 
-        return "/inv"
+        return "/wtb_101"
 
     def update(self, level, available):
         """ Обновляет параметры, от которых зависит выбор локации """
@@ -85,19 +96,29 @@ class Adventures(Location):
 
 
 RANDOM_COMMANDS = [
+    "/hero",
+    "/inv",
+    "/report",
+    "/trades",
     "/top",
     "/worldtop",
-    "/hero",
-    # "/report",
-    # "/inv",
-    # "/trades"
+    "/wtb_113",
+    "/wtb_115",
+    "/wtb_116",
+    "/wtb_117",
+    "/wtb_121",
+    "/wtb_179",
 ]
 
-LOCATIONS = [
-    Location("запрос героя", "🏅Герой", True, 0.7),
-    Location("визит в замок", "🏰Замок", True, 0.6),
-    Adventures("поход", ADVENTURES, False, 1),
-    Random("случайную команду", RANDOM_COMMANDS, True, 0.7),
-    # (!) 'arena': Location("поход на арену", "(!)", False),
-    # (!) 'build': Location("поход на стройку", "/build_(!)", False),
-]
+
+def create_locations():
+    ''' Возвращает массив новых локаций '''
+    # На индекс 2 жестко завязано обновление локаций из файла сессий
+    return [
+        Location("запрос героя", "🏅Герой", True, 0.7),
+        Location("визит в замок", "🏰Замок", True, 0.6),
+        Adventures("поход", ADVENTURES, False, 1),
+        Random("случайную команду", RANDOM_COMMANDS, True, 0.7),
+        # (!) 'arena': Location("поход на арену", "(!)", False),
+        # (!) 'build': Location("поход на стройку", "/build_(!)", False),
+    ]
